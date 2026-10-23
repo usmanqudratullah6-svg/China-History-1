@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>China Through Time · 中国千年</title>
+
+<style>
+:root {
+  --gold: #f4d18b;
+  --ink: #090b17;
+  --red: #9f1d27;
+  --cream: #fff4df;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: Georgia, "Noto Serif SC", serif;
+  overflow-x: hidden;
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid #f4d18b88;
+  background: #171728bb;
+  color: var(--cream);
+  padding: 10px 15px;
+  border-radius: 30px;
+  transition: background .25s, transform .25s;
+}
+
+button:hover {
+  background: var(--red);
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.top {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 5vw;
+  background: linear-gradient(#080a16ee, transparent);
+  font-family: Arial, sans-serif;
+}
+
+.brand {
+  letter-spacing: .18em;
+  font-size: 12px;
+  color: var(--gold);
+}
+
+.lang {
+  display: flex;
+  gap: 8px;
+}
+
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at 50% 65%,
+    #7b2b31 0,
+    #25182d 35%,
+    #090b17 72%
+  );
+  perspective: 900px;
+}
+
+.moon {
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #fff2cb,
+    #d4a86b 55%,
+    #9e6c50
+  );
+  box-shadow: 0 0 90px #e5a45c55;
+  top: 13%;
+  right: 18%;
+  animation: float 7s ease-in-out infinite;
+}
+
+.mountains {
+  position: absolute;
+  bottom: 0;
+  width: 120%;
+  height: 45%;
+  background: #151b2a;
+  clip-path: polygon(
+    0 80%, 10% 40%, 17% 67%, 29% 20%,
+    42% 70%, 55% 25%, 68% 65%, 79% 15%,
+    92% 65%, 100% 35%, 100% 100%, 0 100%
+  );
+  filter: drop-shadow(0 -10px 20px #000);
+}
+
+.wall {
+  position: absolute;
+  bottom: 12%;
+  left: -5%;
+  width: 110%;
+  height: 125px;
+  border-top: 12px solid #d8b77b;
+  border-bottom: 8px solid #5a3337;
+  transform: rotateX(12deg) rotateZ(-3deg);
+  background: repeating-linear-gradient(
+    90deg,
+    #8d5a4d 0 70px,
+    #c99b70 71px 76px
+  );
+  box-shadow: 0 20px 40px #0009;
+  animation: wallmove 18s linear infinite;
+}
+
+.wall:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -40px;
+  height: 30px;
+  background: repeating-linear-gradient(
+    90deg,
+    #e0bd82 0 45px,
+    transparent 46px 75px
+  );
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 20px;
+  transform: translateY(-20px);
+}
+
+.eyebrow {
+  font: 12px Arial, sans-serif;
+  letter-spacing: .35em;
+  color: var(--gold);
+}
+
+h1 {
+  font-size: clamp(46px, 9vw, 112px);
+  font-weight: 400;
+  line-height: .95;
+  margin: 24px 0;
+  text-shadow: 0 8px 35px #000;
+}
+
+.cn-title {
+  font-size: clamp(22px, 4vw, 38px);
+  letter-spacing: .25em;
+  color: var(--gold);
+}
+
+.sub {
+  max-width: 600px;
+  line-height: 1.8;
+  color: #e5d8c5;
+  margin: 24px auto;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primary {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.scroll {
+  position: absolute;
+  bottom: 22px;
+  z-index: 4;
+  font: 10px Arial, sans-serif;
+  letter-spacing: .3em;
+  color: #e6c98e;
+  animation: pulse 2s infinite;
+}
+
+.chapter {
+  display: none;
+  min-height: 100vh;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 5vw;
+  padding: 125px 8vw 100px;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid #ffffff14;
+  background: linear-gradient(120deg, #101323, #191321);
+}
+
+.chapter:nth-child(even) {
+  background: linear-gradient(120deg, #21151b, #0c1220);
+}
+
+.chapter.active {
+  display: grid;
+  animation: slideIn .65s ease both;
+}
+
+.chapter:nth-child(even) .scene {
+  order: 2;
+}
+
+.num {
+  font: 12px Arial, sans-serif;
+  letter-spacing: .3em;
+  color: var(--gold);
+}
+
+h2 {
+  font-size: clamp(35px, 5vw, 64px);
+  font-weight: 400;
+  margin: 16px 0;
+}
+
+.hanzi {
+  font-size: 26px;
+  color: var(--gold);
+  letter-spacing: .2em;
+}
+
+.dates {
+  font: 12px Arial, sans-serif;
+  color: #d7a96a;
+  letter-spacing: .15em;
+  margin: 18px 0;
+}
+
+.desc {
+  font-size: 17px;
+  line-height: 1.95;
+  color: #d8d1cc;
+  max-width: 560px;
+}
+
+.scene {
+  height: min(62vh, 520px);
+  min-height: 320px;
+  position: relative;
+  perspective: 900px;
+  transform-style: preserve-3d;
+  display: grid;
+  place-items: center;
+  border: 1px solid #f4d18b33;
+  border-radius: 48% 48% 12px 12px;
+  background: linear-gradient(145deg, #ffffff08, #00000020);
+  box-shadow: inset 0 0 70px #f4d18b12, 0 30px 80px #0007;
+}
+
+.scene-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    ellipse at 50% 70%,
+    var(--glow, #6e2a34),
+    transparent 68%
+  );
+  filter: blur(4px);
+}
+
+.scene-art {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: drift 8s ease-in-out infinite;
+}
+
+.scene-art:before {
+  content: attr(data-symbol);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(120px, 22vw, 260px);
+  text-shadow: 0 25px 45px #000b, 0 0 45px var(--gold);
+  filter: drop-shadow(0 0 35px #f4d18b88);
+  animation: artifactFloat 5s ease-in-out infinite;
+}
+
+.scene-label {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font: 10px Arial, sans-serif;
+  letter-spacing: .3em;
+  color: #e6c98e;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+
+.slide-nav {
+  position: absolute;
+  z-index: 5;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #f4d18b33;
+  border-radius: 30px;
+  background: #080a16cc;
+  backdrop-filter: blur(10px);
+  max-width: 94%;
+}
+
+.slide-dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border-radius: 50%;
+  background: #fff4df44;
+  border: 0;
+  flex-shrink: 0;
+}
+
+.slide-dot.active {
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold);
+}
+
+.slide-count {
+  font: 11px Arial, sans-serif;
+  color: var(--gold);
+  white-space: nowrap;
+  margin: 0 5px;
+}
+
+.progress {
+  position: fixed;
+  z-index: 30;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--gold);
+  width: 0;
+  box-shadow: 0 0 10px var(--gold);
+}
+
+footer {
+  text-align: center;
+  padding: 60px 20px;
+  color: #b5a38b;
+  line-height: 1.8;
+}
+
+@keyframes float {
+  50% { transform: translateY(-18px); }
+}
+
+@keyframes wallmove {
+  0% { background-position: 0 0; }
+  100% { background-position: 150px 0; }
+}
+
+@keyframes drift {
+  0%, 100% { transform: rotateY(-7deg) translateY(0); }
+  50% { transform: rotateY(7deg) translateY(-12px); }
+}
+
+@keyframes pulse {
+  50% { opacity: .4; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes artifactFloat {
+  0%, 100% {
+    transform: translateZ(60px) translateY(0) rotateY(-5deg);
+  }
+  50% {
+    transform: translateZ(90px) translateY(-12px) rotateY(5deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .top { padding: 14px 4vw; }
+  .brand { font-size: 9px; letter-spacing: .08em; }
+  .lang { gap: 4px; }
+  .lang button { padding: 8px 10px; font-size: 11px; }
+
+  .moon {
+    width: 120px;
+    height: 120px;
+    right: 12%;
+  }
+
+  .wall {
+    height: 70px;
+    bottom: 16%;
+  }
+
+  .chapter {
+    grid-template-columns: 1fr;
+    padding: 100px 7vw 95px;
+    gap: 5px;
+  }
+
+  .chapter:nth-child(even) .scene { order: 0; }
+
+  .scene {
+    height: 300px;
+    min-height: 250px;
+  }
+
+  .desc { font-size: 16px; }
+
+  .slide-nav {
+    bottom: 12px;
+    gap: 6px;
+  }
+
+  .slide-dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+  <div class="brand">CHINA THROUGH TIME · 中国千年</div>
+  <div class="lang">
+    <button id="enBtn">EN</button>
+    <button id="cnBtn">中文</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="moon"></div>
+  <div class="mountains"></div>
+  <div class="wall"></div>
+
+  <div class="hero-copy">
+    <div class="eyebrow"
+      data-en="A JOURNEY THROUGH 3,000 YEARS"
+      data-cn="穿越三千年历史">
+      A JOURNEY THROUGH 3,000 YEARS
+    </div>
+
+    <h1 data-en="CHINA" data-cn="中国">CHINA</h1>
+
+    <div class="cn-title">文明 · 王朝 · 传奇</div>
+
+    <p class="sub"
+      data-en="Walk through the rise of dynasties, legendary thinkers, ancient inventions and stories that shaped one of the world's oldest civilizations."
+      data-cn="走进王朝兴衰、思想先贤、古代发明与传奇故事，探索世界上最古老的文明之一。">
+      Walk through the rise of dynasties, legendary thinkers, ancient inventions and stories that shaped one of the world's oldest civilizations.
+    </p>
+
+    <div class="actions">
+      <button class="primary" id="startBtn"
+        data-en="▶ BEGIN THE JOURNEY"
+        data-cn="▶ 开始旅程">
+        ▶ BEGIN THE JOURNEY
+      </button>
+    </div>
+  </div>
+
+  <div class="scroll"
+    data-en="TRAVEL THROUGH TIME ↓"
+    data-cn="穿越历史 ↓">
+    TRAVEL THROUGH TIME ↓
+  </div>
+</section>
+
+<main class="chapters" id="chapters"></main>
+
+<footer>
+  <div style="font-size:28px;color:var(--gold)">
+    千年中国 · China Through Time
+  </div>
+
+  <p
+    data-en="History is a journey. Every dynasty left a mark on the world."
+    data-cn="历史是一场旅程，每个朝代都在世界留下印记。">
+    History is a journey. Every dynasty left a mark on the world.
+  </p>
+
+  <p>Explore all nine chapters using the navigation dots.</p>
+</footer>
+
+<div class="progress" id="progress"></div>
+
+<script>
+const chapters = [
+{
+  n: "01",
+  title: "The Shang Dynasty",
+  cn: "商朝",
+  date: "c. 1600–1046 BCE",
+  symbol: "🐉",
+  glow: "#71313b",
+  label: "ORACLE BONES · BRONZE",
+
+  en: `The Shang dynasty ruled parts of the Yellow River region and is among the earliest Chinese dynasties supported by strong archaeological evidence. Kings led rituals and warfare, while skilled craftspeople cast elaborate bronze vessels for ceremonies and elite families.
+
+Diviners carved questions onto turtle shells and animal bones, then interpreted the cracks produced by heating them. These oracle-bone inscriptions record royal concerns about harvests, battles, weather and ancestors, and are a major source for early Chinese writing and history.
+
+Shang society included farmers, artisans, soldiers and nobles. Political power depended partly on control of land, bronze production and ritual authority.`,
+
+  zh: `商朝统治着黄河流域的部分地区，是有大量考古证据支持的早期中国王朝之一。商王主持祭祀与战争，工匠铸造精美的青铜礼器。
+
+占卜者把问题刻在龟甲和兽骨上，再根据加热后出现的裂纹进行解释。甲骨文记录了收成、战争、天气和祖先等问题，是研究早期汉字与历史的重要资料。
+
+商代社会包括农民、工匠、士兵和贵族，王权与土地、青铜生产和祭祀密切相关。`
+},
+{
+  n: "02",
+  title: "Qin · The First Emperor",
+  cn: "秦朝 · 秦始皇",
+  date: "221–206 BCE",
+  symbol: "🏯",
+  glow: "#78603b",
+  label: "THE TERRACOTTA ARMY",
+
+  en: `In 221 BCE, the Qin ruler Ying Zheng defeated rival states and became Qin Shi Huang, the First Emperor of a unified China.
+
+The Qin government standardized weights and measures, coinage and forms of writing, helping administration and trade across the empire. Roads and defensive walls were expanded, although the Great Wall was built and rebuilt by many dynasties over centuries.
+
+Qin rule relied on strict laws, heavy labour demands and centralized power, creating resentment. After Qin Shi Huang's death, rebellion spread and the dynasty collapsed in 206 BCE.
+
+His vast burial complex near Xi'an includes the famous Terracotta Army, made to guard him in the afterlife.`,
+
+  zh: `公元前二二一年，秦王嬴政击败其他诸国，称秦始皇，建立统一的中国。
+
+秦朝统一度量衡、货币和文字规范，方便了帝国管理与贸易。道路和防御工事得到扩建，但后世长城是多个朝代不断修筑的成果，并非一位皇帝一次建成。
+
+秦朝依靠严厉法律、繁重劳役和中央集权统治，引发不满。秦始皇死后，各地起义扩大，秦朝于公元前二〇六年灭亡。
+
+西安附近的庞大陵墓区包括著名的兵马俑，用于守护皇帝的陵寝。`
+},
+{
+  n: "03",
+  title: "The Han Dynasty",
+  cn: "汉朝",
+  date: "206 BCE–220 CE",
+  symbol: "🏮",
+  glow: "#8d3d34",
+  label: "SILK ROAD · HAN CULTURE",
+
+  en: `The Han dynasty followed the Qin and developed a durable imperial system that influenced later Chinese governments. Its rulers expanded territory, supported Confucian learning in state administration and maintained a large bureaucracy.
+
+Trade and diplomacy connected China with Central Asia along routes later called the Silk Road. Silk, horses, ideas and religious traditions travelled between regions.
+
+In the Eastern Han period, Cai Lun is traditionally associated with improvements in papermaking, although paper existed earlier. Farming, ironworking, medicine, historical writing and astronomy also developed.
+
+Court struggles, land concentration, rebellions and military pressures weakened the dynasty. In 220 CE, the Han ended and China entered a period of division.`,
+
+  zh: `汉朝继秦朝而起，发展出影响后世中国政府的帝国制度。汉代统治者扩大疆域，支持儒学参与国家治理，并建立庞大的官僚体系。
+
+贸易与外交沿后来被称为丝绸之路的路线连接中国和中亚，丝绸、马匹、思想和宗教传统由此交流。
+
+东汉时期，蔡伦通常被认为改进了造纸技术，不过纸张在他之前已经存在。农业、冶铁、医学、历史写作和天文学都有发展。
+
+宫廷斗争、土地兼并、起义和军事压力削弱了王朝，汉朝于公元二二〇年结束，中国随后进入分裂时期。`
+},
+{
+  n: "04",
+  title: "The Tang Golden Age",
+  cn: "唐朝 · 盛世",
+  date: "618–907 CE",
+  symbol: "🌸",
+  glow: "#743d6a",
+  label: "POETRY · ART · CHANG’AN",
+
+  en: `The Tang dynasty reunited much of China after centuries of division. Its cosmopolitan capital, Chang'an, was one of the largest cities of its age.
+
+Merchants, monks, diplomats and travellers arrived from across Asia, bringing goods, beliefs and artistic influences. Poetry and painting flourished. Li Bai became famous for imaginative verse, while Du Fu wrote with deep attention to war, hardship and society.
+
+Buddhism, Daoism and Confucian traditions shaped cultural life. The civil service examination system helped select officials, although elite family connections remained important.
+
+Rebellions and regional military governors weakened central authority, and the dynasty fell in 907.`,
+
+  zh: `唐朝结束了数百年的分裂，重新统一中国大部分地区。首都长安是当时世界上规模最大的城市之一。
+
+商人、僧侣、外交使节和旅行者从亚洲各地来到这里，带来商品、信仰与艺术影响。诗歌和绘画繁荣发展：李白以想象丰富的诗歌闻名，杜甫则深切关注战争、苦难与社会。
+
+佛教、道教和儒家传统共同影响文化生活。科举制度帮助选拔官员，不过家族背景仍然重要。
+
+叛乱和地方军阀削弱中央权力，唐朝最终于九〇七年灭亡。`
+},
+{
+  n: "05",
+  title: "The Three Kingdoms",
+  cn: "三国时代",
+  date: "220–280 CE",
+  symbol: "⚔️",
+  glow: "#3b5268",
+  label: "LOYALTY · STRATEGY · LEGEND",
+
+  en: `After the Han dynasty collapsed, rival states competed for control of China. The three best known were Wei in the north, Shu in the southwest and Wu in the southeast.
+
+Their rulers relied on generals, alliances, diplomacy and military campaigns, while ordinary people faced displacement and repeated warfare. The Jin state conquered Wu in 280 CE, briefly reunifying the country.
+
+Centuries later, the historical era inspired Romance of the Three Kingdoms, a famous novel blending recorded events with legend. Guan Yu became a symbol of loyalty, while Zhuge Liang became associated with strategy and wisdom.
+
+These stories remain popular in Chinese opera, television, novels and video games, but the novel is not a completely factual record.`,
+
+  zh: `汉朝灭亡后，各方势力争夺中国的统治权。最著名的三个政权是北方的魏、西南的蜀和东南的吴。
+
+统治者依靠将领、联盟、外交和军事行动竞争，普通百姓则承受流离失所与持续战争。公元二八〇年，晋灭吴，短暂重新统一中国。
+
+数百年后，这段历史启发了著名小说《三国演义》，作品将史实与传说结合。关羽成为忠义的象征，诸葛亮则常与谋略和智慧联系在一起。
+
+这些故事至今仍活跃于戏曲、影视、小说和电子游戏中，但小说并非完全准确的历史记录。`
+},
+{
+  n: "06",
+  title: "The Great Voyages",
+  cn: "郑和下西洋",
+  date: "1405–1433 CE",
+  symbol: "⛵",
+  glow: "#315b70",
+  label: "MING FLEET · INDIAN OCEAN",
+
+  en: `During the Ming dynasty, the Yongle emperor sponsored maritime expeditions led by the Muslim admiral Zheng He.
+
+Between 1405 and 1433, fleets travelled through Southeast Asia and across the Indian Ocean, visiting ports in South Asia, Arabia and East Africa. The voyages carried envoys, gifts and trade goods and helped establish diplomatic relationships with distant rulers.
+
+The expeditions demonstrated Ming shipbuilding, navigation and state organisation. However, some later accounts of ship sizes remain debated by historians, and the voyages did not create a permanent overseas empire.
+
+Later Ming priorities shifted, and large state-sponsored voyages stopped. Zheng He's journeys remain an important chapter in the history of maritime exchange.`,
+
+  zh: `明朝永乐皇帝支持了一系列由穆斯林航海家郑和率领的远航。
+
+公元一四〇五年至一四三三年间，船队穿越东南亚和印度洋，访问南亚、阿拉伯和东非沿岸港口。远航带去使节、礼物和贸易商品，并与遥远地区的统治者建立外交联系。
+
+船队规模和航海组织体现了明朝的能力，不过一些后世记载中的船只尺寸仍有历史争议。这些远航并未建立永久的海外帝国。
+
+后来明朝的政策重点发生变化，国家支持的大规模远航逐渐停止，但郑和的航行仍是海上交流史的重要篇章。`
+},
+{
+  n: "07",
+  title: "The Forbidden City",
+  cn: "紫禁城",
+  date: "Built from 1406 · Beijing",
+  symbol: "🏮",
+  glow: "#8b352b",
+  label: "IMPERIAL PALACE · BEIJING",
+
+  en: `Construction of the Forbidden City in Beijing began in 1406. The palace complex was used by Ming and Qing emperors for nearly five centuries.
+
+Its gates, courtyards and ceremonial halls reflected the hierarchy of imperial government. Access to the emperor was carefully controlled, and major ceremonies took place in grand central spaces.
+
+Red walls, golden roofs, carved stone and carefully arranged buildings combined practical design with political symbolism. The palace was also a working centre of administration, not simply a private home.
+
+After the Qing dynasty fell, the complex became a museum and is now known as the Palace Museum. It remains a major source for understanding Chinese court culture and architecture.`,
+
+  zh: `北京紫禁城于一四〇六年开始兴建，近五百年来一直是明清皇帝使用的宫殿群。
+
+层层宫门、庭院和举行大典的殿宇体现了皇权等级：进入皇帝所在区域受到严格控制，重要仪式则在中央的大型殿堂举行。
+
+红墙、金色屋顶、石雕和严谨布局兼具实用功能与政治象征。紫禁城不仅是皇帝居所，也是国家行政中心。
+
+清朝灭亡后，宫殿群成为博物馆，现称故宫博物院。它是北京历史景观的重要组成部分，也帮助人们理解中国宫廷文化与建筑艺术。`
+},
+{
+  n: "08",
+  title: "The Four Great Inventions",
+  cn: "中国古代四大发明",
+  date: "Paper · Printing · Gunpowder · Compass",
+  symbol: "🧭",
+  glow: "#56603a",
+  label: "IDEAS THAT CHANGED THE WORLD",
+
+  en: `Four technologies are traditionally celebrated as China's Four Great Inventions: papermaking, printing, gunpowder and the magnetic compass.
+
+Paper developed over time, and Cai Lun is traditionally credited with improving its production during the Han era. Woodblock printing allowed texts and images to be reproduced. Movable type was developed in China centuries before printing became widespread in Europe.
+
+Gunpowder emerged from early experiments with substances used by Chinese alchemists and later transformed military technology. The magnetic compass gradually improved navigation on land and sea.
+
+These technologies spread through trade, travel and cultural contact. They were adapted in different regions and contributed to major changes in education, communication, exploration and warfare worldwide.`,
+
+  zh: `造纸术、印刷术、火药和指南针传统上被称为中国古代四大发明。
+
+纸张技术经过长期发展，东汉时期的蔡伦通常被认为改进了造纸工艺。雕版印刷使文字和图像能够复制，中国也在欧洲印刷普及前数百年发展了活字印刷。
+
+火药源于古代炼丹实验中的物质研究，后来改变了军事技术。磁性指南针逐渐改善了陆地与海上导航。
+
+这些技术通过贸易、旅行和文化接触传播，并在不同地区得到改进，对全球教育、传播、探索和战争产生了深远影响。`
+},
+{
+  n: "09",
+  title: "China in the Modern Era",
+  cn: "走向现代中国",
+  date: "1912 · 1949 · Today",
+  symbol: "🌆",
+  glow: "#344f70",
+  label: "TRANSFORMATION · MODERN CHINA",
+
+  en: `The Qing dynasty ended in 1912 after revolution, closing more than two thousand years of imperial rule. The new republic faced political fragmentation, foreign pressure, war and competing visions for China's future.
+
+The Second Sino-Japanese War brought enormous suffering. After the wider civil war, the People's Republic of China was founded in 1949, while the Republic of China government retreated to Taiwan.
+
+In the decades that followed, China experienced major political campaigns, social upheaval and later market-oriented economic reforms beginning in the late 1970s.
+
+Rapid industrialisation, urban growth, infrastructure and technological development transformed daily life. Modern China remains historically complex, with ongoing debates about development, governance, identity and its role in the world.`,
+
+  zh: `一九一二年，清朝在革命后结束，两千多年的帝制走向终结。新共和国面对政治分裂、外国压力、战争以及关于中国未来的不同主张。
+
+抗日战争造成巨大苦难；随后在更广泛的内战之后，中华人民共和国于一九四九年成立，中华民国政府则迁往台湾。
+
+此后数十年，中国经历了重大政治运动、社会动荡，并于二十世纪七十年代末开始以市场为导向的经济改革。
+
+快速工业化、城市发展、基础设施建设和科技进步改变了日常生活。现代中国的历史仍然复杂，发展、治理、身份认同及其国际角色都是持续讨论的话题。`
+}
+];
+
+let lang = "en";
+let currentSlide = 0;
+
+const root = document.getElementById("chapters");
+
+function render() {
+  root.innerHTML = chapters.map((c, i) => `
+    <section class="chapter ${i === currentSlide ? "active" : ""}"
+      id="c${i}">
+
+      <div class="copy">
+        <div class="num">
+          ${lang === "en" ? "CHAPTER" : "章节"} ${c.n} / 09
+        </div>
+
+        <h2>${lang === "en" ? c.title : c.cn}</h2>
+
+        <div class="hanzi">
+          ${lang === "en" ? c.cn : c.title}
+        </div>
+
+        <div class="dates">${c.date}</div>
+
+        <p class="desc">
+          ${(lang === "en" ? c.en : c.zh).replace(/\n\n/g, "<br><br>")}
+        </p>
+
+        <div class="controls">
+          <button class="primary" onclick="goSlide(${i - 1})"
+            ${i === 0 ? "disabled" : ""}>
+            ${lang === "en" ? "← Previous" : "← 上一页"}
+          </button>
+
+          <button onclick="goSlide(${i + 1})"
+            ${i === chapters.length - 1 ? "disabled" : ""}>
+            ${lang === "en" ? "Next chapter →" : "下一章 →"}
+          </button>
+        </div>
+      </div>
+
+      <div class="scene">
+        <div class="scene-bg" style="--glow:${c.glow}"></div>
+        <div class="scene-art" data-symbol="${c.symbol}"></div>
+        <div class="scene-label">${c.label}</div>
+      </div>
+    </section>
+  `).join("") + `
+    <nav class="slide-nav" aria-label="History chapters">
+      <button class="slide-dot" onclick="goSlide(${Math.max(0, currentSlide - 1)})"
+        aria-label="Previous chapter">‹</button>
+
+      <span class="slide-count">
+        ${String(currentSlide + 1).padStart(2, "0")} / ${chapters.length}
+      </span>
+
+      ${chapters.map((c, i) => `
+        <button class="slide-dot ${i === currentSlide ? "active" : ""}"
+          onclick="goSlide(${i})"
+          aria-label="Go to chapter ${i + 1}"
+          title="${c.title}"></button>
+      `).join("")}
+
+      <button class="slide-dot"
+        onclick="goSlide(${Math.min(chapters.length - 1, currentSlide + 1)})"
+        aria-label="Next chapter">›</button>
+    </nav>
+  `;
+
+  document.querySelectorAll("[data-en]").forEach(el => {
+    el.textContent = lang === "en" ? el.dataset.en : el.dataset.cn;
+  });
+
+  document.getElementById("enBtn").style.background =
+    lang === "en" ? "#9f1d27" : "";
+
+  document.getElementById("cnBtn").style.background =
+    lang === "cn" ? "#9f1d27" : "";
+
+  updateProgress();
+}
+
+function goSlide(i) {
+  currentSlide = Math.max(0, Math.min(chapters.length - 1, i));
+  render();
+
+  document.getElementById("chapters").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function updateProgress() {
+  document.getElementById("progress").style.width =
+    ((currentSlide + 1) / chapters.length * 100) + "%";
+}
+
+document.getElementById("enBtn").onclick = () => {
+  lang = "en";
+  render();
+};
+
+document.getElementById("cnBtn").onclick = () => {
+  lang = "cn";
+  render();
+};
+
+document.getElementById("startBtn").onclick = () => {
+  goSlide(0);
+};
+
+window.addEventListener("scroll", () => {
+  const h = document.documentElement;
+  const maxScroll = h.scrollHeight - h.clientHeight;
+
+  if (maxScroll > 0) {
+    document.getElementById("progress").style.width =
+      (h.scrollTop / maxScroll * 100) + "%";
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") goSlide(currentSlide + 1);
+  if (e.key === "ArrowLeft") goSlide(currentSlide - 1);
+});
+
+document.addEventListener("mousemove", e => {
+  if (innerWidth < 760) return;
+
+  document.querySelectorAll(".scene-art").forEach(el => {
+    const r = el.parentElement.getBoundingClientRect();
+
+    if (e.clientY > r.top && e.clientY < r.bottom) {
+      const x = (e.clientX - innerWidth / 2) / innerWidth * 10;
+      el.style.transform = `rotateY(${x}deg) translateY(-6px)`;
+    }
+  });
+});
+
+render();
+</script>
+</body>
+</html>
